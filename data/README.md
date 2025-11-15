@@ -83,28 +83,52 @@ Saved trained models and trie structures:
 
 ## Data Statistics
 
-_To be populated after Phase 1: Data Exploration_
-
-**Total Plays:**
-- Raw:
-- Filtered:
-
-**Drives:**
-- Total drives:
-- Average plays per drive:
-- Median plays per drive:
+**Total Plays:** 141,289 clean plays
+**Games:** 1,139 NFL games (2021-2024 seasons)
+**Drives:** ~19,000 drives
 
 **Play Type Distribution:**
-- Pass:
-- Run:
+- Pass: ~58%
+- Run: ~42%
 
-## Gitignore Note
+**Situation Distribution:**
+- Early downs (1st/2nd): ~75%
+- 3rd down: ~20%
+- 4th down: ~3%
+- Red zone: ~12%
+- Goal line: ~4%
 
-Large data files (>100MB) are gitignored. To reproduce:
+**File Sizes:**
+- `pbp_clean.parquet`: 66 MB
+- Trained models: 314 KB - 1.8 MB each
+
+## ⚠️ Important: Data Files Not Included in Git
+
+**The 66MB parquet data file is excluded from version control** to keep the repository lightweight.
+
+### How to Get the Data
+
+**Option 1: Generate from source** (Recommended)
+```bash
+# Install nfl_data_py
+pip install nfl_data_py
+
+# Run the data processing script
+python scripts/save_clean_data.py
+```
+
+This will:
+- Download NFL play-by-play data for 2021-2024 seasons
+- Clean and filter the data
+- Save to `data/processed/pbp_clean.parquet`
+
+**Option 2: Use existing trained models**
+
+The trained models (`.pkl` files in `data/models/`) are included in the repository and can be used directly without regenerating data:
 
 ```bash
-python scripts/download_data.py --seasons 2021 2022 2023 2024
-python scripts/process_data.py
+python scripts/corrected_predictions_demo.py  # Use baseline model
+python scripts/combined_demo.py               # Use combined model
 ```
 
 ## Data Quality Issues

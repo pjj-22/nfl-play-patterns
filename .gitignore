@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific: Data files
+# Exclude large parquet data files - can be regenerated using scripts/save_clean_data.py
+data/processed/*.parquet
+data/raw/*.parquet
+data/raw/*.csv
+
+# Keep trained models (smaller, represent project outputs)
+# data/models/*.pkl files are committed
