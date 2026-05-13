@@ -1,9 +1,3 @@
-"""
-Situation grouping logic for the corrected model architecture.
-
-Separates game situations from play types to avoid conflating
-play-calling decisions with game outcomes.
-"""
 from enum import Enum
 from typing import Dict, Any, Union
 
@@ -34,13 +28,11 @@ class SituationGroup(Enum):
 
 def get_score_context(score_differential: float) -> str:
     """
-    Classify score context into categories.
-
     Args:
         score_differential: Points ahead (positive) or behind (negative)
 
     Returns:
-        String: 'trailing', 'tied', or 'leading'
+        'trailing', 'tied', or 'leading'
     """
     if score_differential <= -7:
         return "trailing"
@@ -52,15 +44,10 @@ def get_score_context(score_differential: float) -> str:
 
 def get_situation_group(down: int, ydstogo: int, yardline_100: int) -> SituationGroup:
     """
-    Classify a game situation into a broad group.
-
     Args:
         down: Down number (1-4)
         ydstogo: Yards to go for first down
         yardline_100: Yards from opponent's goal line (0-100)
-
-    Returns:
-        SituationGroup enum value
     """
     # Goal line situations (inside 5 yards)
     if yardline_100 <= 5:
@@ -101,19 +88,7 @@ def get_score_aware_situation(
     yardline_100: int,
     score_differential: float
 ) -> str:
-    """
-    Get situation group that includes score context.
-
-    Args:
-        down: Down number (1-4)
-        ydstogo: Yards to go for first down
-        yardline_100: Yards from opponent's goal line (0-100)
-        score_differential: Points ahead (positive) or behind (negative)
-
-    Returns:
-        String combining base situation and score context
-        Example: "third_short_trailing"
-    """
+    """Returns a string like 'third_short_trailing' combining situation and score context."""
     base_situation = get_situation_group(down, ydstogo, yardline_100)
     score_context = get_score_context(score_differential)
 
@@ -122,13 +97,7 @@ def get_score_aware_situation(
 
 def get_team_identity_context(pass_rate: float) -> str:
     """
-    Classify team offensive identity based on pass rate.
-
-    Args:
-        pass_rate: Team's pass rate (0.0 to 1.0)
-
-    Returns:
-        String: 'pass_heavy', 'balanced', or 'run_heavy'
+    Returns 'pass_heavy' (>= 60%), 'run_heavy' (<= 45%), or 'balanced'.
     """
     if pass_rate >= 0.60:
         return "pass_heavy"

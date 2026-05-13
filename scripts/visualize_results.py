@@ -1,6 +1,4 @@
-"""
-Visualize the corrected model's findings with charts and graphs.
-"""
+"""Visualize model findings with charts and graphs."""
 import sys
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -15,40 +13,39 @@ from src.models.situation_groups import SituationGroup, get_situation_group
 
 
 def plot_accuracy_comparison():
-    """Compare old vs new model accuracy."""
+    """Compare legacy vs current model accuracy."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-    # Old model (flawed)
+    # Legacy model (46-state prediction)
     old_accuracy = 18.36
     old_random = 2.17
     old_options = 46
 
-    ax1.bar(['Random\nBaseline', 'Old Model'], [old_random, old_accuracy],
+    ax1.bar(['Random\nBaseline', 'Legacy Model'], [old_random, old_accuracy],
             color=['#FF6B6B', '#4ECDC4'], alpha=0.7, edgecolor='black', linewidth=2)
     ax1.axhline(y=old_random, color='red', linestyle='--', alpha=0.5, label='Random baseline')
     ax1.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
-    ax1.set_title('OLD MODEL (FLAWED)\nPredicting 46 compound states', fontsize=14, fontweight='bold')
+    ax1.set_title('Legacy Model\nPredicting 46 compound states', fontsize=14, fontweight='bold')
     ax1.set_ylim([0, 100])
     ax1.grid(axis='y', alpha=0.3)
 
     # Add text annotations
     ax1.text(0, old_random + 2, f'{old_random:.1f}%', ha='center', fontweight='bold')
     ax1.text(1, old_accuracy + 2, f'{old_accuracy:.1f}%', ha='center', fontweight='bold')
-    ax1.text(0.5, 50, f'8.4x improvement\n(but logically flawed)',
+    ax1.text(0.5, 50, f'8.4x improvement\n(wrong problem)',
              ha='center', fontsize=11, style='italic',
              bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.3))
 
-    # New model (corrected)
     new_accuracy = 61.65
     new_random = 50.0
     always_pass = 57.0
 
-    ax2.bar(['Random\nBaseline', 'Always\nPass', 'New Model'],
+    ax2.bar(['Random\nBaseline', 'Always\nPass', 'Current Model'],
             [new_random, always_pass, new_accuracy],
             color=['#FF6B6B', '#FFE66D', '#4ECDC4'], alpha=0.7, edgecolor='black', linewidth=2)
     ax2.axhline(y=new_random, color='red', linestyle='--', alpha=0.5, label='Random baseline')
     ax2.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
-    ax2.set_title('NEW MODEL (CORRECTED)\nPredicting Pass vs Run only', fontsize=14, fontweight='bold')
+    ax2.set_title('Current Model\nPredicting Pass vs Run only', fontsize=14, fontweight='bold')
     ax2.set_ylim([0, 100])
     ax2.grid(axis='y', alpha=0.3)
 
@@ -115,7 +112,7 @@ def plot_architecture_comparison():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
 
     # Old architecture (flawed)
-    ax1.text(0.5, 0.9, 'OLD ARCHITECTURE (FLAWED)',
+    ax1.text(0.5, 0.9, 'LEGACY ARCHITECTURE',
              ha='center', fontsize=16, fontweight='bold', transform=ax1.transAxes)
 
     ax1.text(0.5, 0.8, 'Conflated Encoding',
@@ -147,7 +144,7 @@ def plot_architecture_comparison():
         ax1.text(x_pos, y_pos, label, ha='center', fontsize=8, transform=ax1.transAxes,
                 bbox=dict(boxstyle='round', facecolor='#4ECDC4', alpha=0.6))
 
-    ax1.text(0.5, 0.15, '[X] Problem: Encoding includes\nPLAY TYPE + RESULTING SITUATION',
+    ax1.text(0.5, 0.15, 'Problem: Encoding includes\nPLAY TYPE + RESULTING SITUATION',
              ha='center', fontsize=11, transform=ax1.transAxes,
              bbox=dict(boxstyle='round', facecolor='#FF6B6B', alpha=0.3))
 
@@ -156,8 +153,7 @@ def plot_architecture_comparison():
 
     ax1.axis('off')
 
-    # New architecture (corrected)
-    ax2.text(0.5, 0.9, 'NEW ARCHITECTURE (CORRECTED)',
+    ax2.text(0.5, 0.9, 'CURRENT ARCHITECTURE',
              ha='center', fontsize=16, fontweight='bold', transform=ax2.transAxes)
 
     ax2.text(0.5, 0.8, 'Separated Encoding',
@@ -181,7 +177,7 @@ def plot_architecture_comparison():
         ax2.arrow(0.38, y, 0.15, 0, head_width=0.02, head_length=0.03,
                  fc='black', transform=ax2.transAxes, alpha=0.5)
 
-    ax2.text(0.5, 0.15, '[OK] Solution: Separate tries per situation\nStore ONLY play types (P, R)',
+    ax2.text(0.5, 0.15, 'Solution: Separate tries per situation\nStore ONLY play types (P, R)',
              ha='center', fontsize=11, transform=ax2.transAxes,
              bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.3))
 
@@ -285,7 +281,7 @@ def plot_sequence_patterns():
 
 def main():
     print("=" * 70)
-    print("Generating Visualizations for Corrected Model")
+    print("Generating Visualizations")
     print("=" * 70)
 
     output_dir = Path(__file__).parent.parent / "visualizations"

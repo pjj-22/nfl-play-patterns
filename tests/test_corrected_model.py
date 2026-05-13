@@ -1,6 +1,4 @@
-"""
-Tests for the corrected model architecture.
-"""
+"""Tests for the grouped trie model."""
 import pytest
 from src.models.simple_classifier import SimplePlayClassifier, SimplePlayType
 from src.models.situation_groups import SituationGroup, get_situation_group

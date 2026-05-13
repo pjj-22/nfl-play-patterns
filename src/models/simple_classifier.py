@@ -1,10 +1,3 @@
-"""
-Simplified play classifier for corrected architecture.
-
-Only encodes play TYPE (Pass or Run), not the game situation.
-Game situations are handled separately to avoid conflating
-decisions with outcomes.
-"""
 from dataclasses import dataclass
 from typing import Dict, Any, List
 import pandas as pd
@@ -28,22 +21,12 @@ class SimplePlayType:
 
 
 class SimplePlayClassifier:
-    """
-    Encodes plays as just Pass (P) or Run (R).
-
-    This is the corrected classifier that separates play TYPE
-    from game SITUATION, avoiding the architectural flaw.
-    """
+    """Encodes plays as Pass (P) or Run (R)."""
 
     def encode(self, play: Dict[str, Any]) -> SimplePlayType:
         """
-        Encode a play into Pass or Run only.
-
         Args:
             play: Dictionary with key 'play_type' ('pass' or 'run')
-
-        Returns:
-            SimplePlayType('P') or SimplePlayType('R')
         """
         if play['play_type'] == 'pass':
             return SimplePlayType('P')
@@ -54,11 +37,9 @@ class SimplePlayClassifier:
             return SimplePlayType('OTHER')
 
     def encode_series(self, plays: pd.DataFrame) -> List[SimplePlayType]:
-        """Encode a series of plays."""
         return [self.encode(play) for _, play in plays.iterrows()]
 
     def decode(self, play_type: SimplePlayType) -> str:
-        """Convert SimplePlayType back to readable name."""
         if play_type.code == 'P':
             return 'PASS'
         elif play_type.code == 'R':

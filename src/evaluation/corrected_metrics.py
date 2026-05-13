@@ -1,9 +1,4 @@
-"""
-Evaluation metrics for the corrected model architecture.
-
-Calculates Pass/Run prediction accuracy without conflating
-play types with game outcomes.
-"""
+"""Evaluation metrics for Pass/Run prediction accuracy."""
 from typing import Dict
 from dataclasses import dataclass
 import pandas as pd
@@ -45,7 +40,7 @@ class BinaryPredictionMetrics:
 
 
 class CorrectedTrieEvaluator:
-    """Evaluate the corrected grouped trie model."""
+    """Evaluate the grouped trie model."""
 
     def __init__(self, trie: SituationGroupedTrie, classifier: SimplePlayClassifier):
         self.trie = trie

@@ -44,10 +44,9 @@ def main():
     print(f"   ✓ Saved! File size: {file_size_mb:.1f} MB")
 
     print("\n" + "=" * 60)
-    print("✓ Complete! Data ready for model training.")
+    print("Data ready for model training.")
     print("=" * 60)
-    print("\nNext step:")
-    print("  python scripts/evaluate_model.py")
+    print("\nNext: python scripts/train_corrected_model.py")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,3 @@
-"""
-Train and evaluate the CORRECTED model architecture.
-
-This version uses SituationGroupedTrie to predict Pass/Run only,
-without conflating play-calling decisions with game outcomes.
-"""
 import sys
 import pandas as pd
 from pathlib import Path
@@ -18,24 +12,21 @@ from src.evaluation.corrected_metrics import CorrectedTrieEvaluator
 
 def main():
     print("=" * 70)
-    print("CORRECTED NFL PLAY PREDICTION - Training & Evaluation")
+    print("NFL Play Prediction - Training & Evaluation")
     print("=" * 70)
-    print("\nThis model predicts ONLY Pass vs Run, without conflating")
-    print("play-calling decisions with game outcomes.")
 
     # Load data
     print("\n1. Loading NFL data...")
     data_path = Path(__file__).parent.parent / "data" / "processed" / "pbp_clean.parquet"
 
     if not data_path.exists():
-        print(f"❌ Error: Data file not found at {data_path}")
-        print("Please run: python scripts/save_clean_data.py")
+        print(f"Data not found at {data_path}")
+        print("Run: python scripts/save_clean_data.py")
         return
 
     pbp = pd.read_parquet(data_path)
     print(f"   ✓ Loaded {len(pbp):,} plays from {pbp['game_id'].nunique()} games")
 
-    # Train/test split by GAMES
     print("\n2. Creating train/test split...")
     games = pbp['game_id'].unique()
     train_games, test_games = train_test_split(games, test_size=0.2, random_state=42)
@@ -46,8 +37,7 @@ def main():
     print(f"   Train: {len(train_games):,} games, {len(train_df):,} plays")
     print(f"   Test:  {len(test_games):,} games, {len(test_df):,} plays")
 
-    # Build corrected model
-    print("\n3. Building corrected situation-grouped trie...")
+    print("\n3. Building situation-grouped trie...")
     classifier = SimplePlayClassifier()
     trie = SituationGroupedTrie(max_depth=8)
 
@@ -58,7 +48,7 @@ def main():
         if i % 1000 == 0:
             print(f"   Processing drive {i+1:,}/{total_drives:,}...", end='\r')
 
-        # Encode play types (just P or R)
+        # Encode play types (P or R)
         play_types = classifier.encode_series(drive)
 
         # Extract situations (down, ydstogo, yardline)
@@ -67,10 +57,8 @@ def main():
             for _, row in drive.iterrows()
         ]
 
-        # EPAs
         epas = drive['epa'].tolist() if 'epa' in drive.columns else None
 
-        # Insert into grouped trie
         trie.insert_drive(play_types, situations, epas)
 
     print(f"\n   ✓ Trie built from {total_drives:,} training drives")
@@ -133,21 +121,10 @@ def main():
     print(f"   ✓ Model saved to: {model_path}")
 
     print("\n" + "=" * 70)
-    print("✓ TRAINING COMPLETE")
+    print("Training complete")
     print("=" * 70)
-
-    print("\n📊 Key Takeaways:")
-    print(f"  - Binary Pass/Run accuracy: {metrics.overall_accuracy:.2%}")
-    print(f"  - {improvement:.2f}x better than random guessing")
-    print(f"  - No conflation of decisions with outcomes")
-    print(f"  - Model predicts ONLY play type, not game state")
-
-    print("\n🔗 Next steps:")
-    print("  - Run demo: python scripts/corrected_predictions_demo.py")
-    print("  - Compare to old model results in PROJECT_SUMMARY.md")
-    print("  - Update documentation with corrected architecture")
-
-    print("\n" + "=" * 70 + "\n")
+    print(f"\nAccuracy: {metrics.overall_accuracy:.2%} ({improvement:.2f}x better than random)")
+    print("Run demo: python scripts/corrected_predictions_demo.py\n")
 
 
 if __name__ == "__main__":
